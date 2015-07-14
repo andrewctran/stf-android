@@ -7,4 +7,7 @@
     <string name="title_activity_annotate">AnnotateActivity</string>
     <string name="title_activity_stfannotate">STFAnnotateActivity</string>
     <string name="action_send">Send</string>
+    <string name="report_a_bug">Report a bug</string>
+    <string name="email">Enter your email</string>
+    <string name="feedback">Enter your feedback</string>
 </resources>

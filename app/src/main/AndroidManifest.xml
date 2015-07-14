@@ -25,7 +25,8 @@
         </activity>
         <activity
             android:name=".STFAnnotateActivity"
-            android:label="@string/title_activity_stfannotate" >
+            android:label="@string/report_a_bug"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

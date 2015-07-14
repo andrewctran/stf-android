@@ -1,12 +1,16 @@
 package com.nextdoor.stfandroid;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -15,7 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 
-public class STFAnnotateActivity extends Activity {
+public class STFAnnotateActivity extends ActionBarActivity {
     private FrameLayout panel;
     private ImageView screenshotView;
     private float downX;
@@ -33,6 +37,8 @@ public class STFAnnotateActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stfannotate);
         screenshotView = (ImageView) findViewById(R.id.screenshot);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         screenshotView.setDrawingCacheEnabled(true);
         screenshotView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -41,12 +47,12 @@ public class STFAnnotateActivity extends Activity {
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
                         downX = event.getX();
-                        downY = event.getY();
+                        downY = event.getY() + 100;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
                         upX = event.getX();
-                        upY = event.getY();
+                        upY = event.getY() + 100;
                         canvas.drawLine(downX, downY, upX, upY, paint);
                         screenshotView.invalidate();
                         downX = upX;
@@ -85,9 +91,32 @@ public class STFAnnotateActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            this.finish();
             return true;
+        } else if (id == R.id.action_send) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Get the layout inflater
+            LayoutInflater inflater = this.getLayoutInflater();
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(inflater.inflate(R.layout.dialog_feedback, null))
+                    // Add action buttons
+                    .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            // sign in the user ...
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.stf_blue));
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.stf_blue));
         }
 
         return super.onOptionsItemSelected(item);
@@ -97,10 +126,10 @@ public class STFAnnotateActivity extends Activity {
         overlay = Bitmap.createBitmap(screenshot.getWidth(), screenshot.getHeight(), screenshot.getConfig());
         canvas = new Canvas(overlay);
         paint = new Paint();
-        paint.setColor(getResources().getColor(android.R.color.holo_blue_dark));
+        paint.setColor(getResources().getColor(R.color.stf_blue));
         paint.setDither(true);
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(10);
+        paint.setStrokeWidth(5);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
