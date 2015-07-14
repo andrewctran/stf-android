@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -52,5 +54,13 @@ public class STFAnnotator {
         } catch (IOException e) {
         }
         return imagePath;
+    }
+
+    public static Bitmap mergeAnnotation(Bitmap screenshot, Bitmap annotation) {
+        Bitmap overlay = Bitmap.createBitmap(screenshot.getWidth(), screenshot.getHeight(), screenshot.getConfig());
+        Canvas canvas = new Canvas(overlay);
+        canvas.drawBitmap(screenshot, new Matrix(), null);
+        canvas.drawBitmap(annotation, 0, 0, null);
+        return overlay;
     }
 }

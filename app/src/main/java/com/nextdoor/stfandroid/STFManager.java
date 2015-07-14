@@ -46,6 +46,5 @@ public class STFManager implements STFListener.ShakeListener {
         Intent launchIntent = new Intent(context, STFAnnotateActivity.class);
         launchIntent.putExtra(TAG, imagePath);
         context.startActivity(launchIntent);
-
     }
 }
