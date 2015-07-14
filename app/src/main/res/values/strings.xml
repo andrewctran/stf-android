@@ -4,4 +4,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_annotate">AnnotateActivity</string>
+    <string name="title_activity_stfannotate">STFAnnotateActivity</string>
+    <string name="action_send">Send</string>
 </resources>

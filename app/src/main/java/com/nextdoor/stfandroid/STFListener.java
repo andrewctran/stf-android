@@ -5,8 +5,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import java.util.concurrent.ExecutionException;
+
 public class STFListener implements SensorEventListener {
-    private static final int SHAKE_THRESHOLD = 3;
+    private static final int SHAKE_THRESHOLD = 2;
 
     private Sensor accelerometer;
     private SensorManager sensorManager;
