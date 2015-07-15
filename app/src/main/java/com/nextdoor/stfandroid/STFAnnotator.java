@@ -17,6 +17,7 @@ import java.io.IOException;
  */
 public class STFAnnotator {
     public static final String TAG = "STFAnnotator";
+    public static final String IMAGE_PATH = Environment.getExternalStorageDirectory() + "/STFScreenshot";
 
     /**
      * Takes a screenshot of the current display.

@@ -1,23 +1,46 @@
 package com.nextdoor.stfandroid;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 
 public class STFAnnotateActivity extends ActionBarActivity {
-    private ImageView screenshotView;
+    private final int STROKE_WIDTH = 5;
+    private final String PAINT_COLOR = "#F22613";
+    private final int CORRECTION = 100;
+    private final String SEND_BUTTON = "Send";
+    private final String CANCEL_BUTTON = "Cancel";
+
+    private ImageView annotationView;
     private float downX;
     private float downY;
     private float upX;
@@ -27,48 +50,19 @@ public class STFAnnotateActivity extends ActionBarActivity {
     private Bitmap overlay;
     private Bitmap screenshot;
     private Matrix matrix;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stfannotate);
-        screenshotView = (ImageView) findViewById(R.id.screenshot);
+        annotationView = (ImageView) findViewById(R.id.screenshot);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setElevation(10);
-        screenshotView.setDrawingCacheEnabled(true);
-        screenshotView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        downX = event.getX();
-                        downY = event.getY() + 100;
-                        break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        upX = event.getX();
-                        upY = event.getY() + 100;
-                        canvas.drawLine(downX, downY, upX, upY, paint);
-                        screenshotView.invalidate();
-                        downX = upX;
-                        downY = upY;
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        break;
-
-                    case MotionEvent.ACTION_CANCEL:
-                        break;
-
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
-        screenshot = STFAnnotator.getScreenshot(getIntent().getStringExtra(STFSession.TAG));
+        annotationView.setDrawingCacheEnabled(true);
+        annotationView.setOnTouchListener(getAnnotationListener());
+        screenshot = STFAnnotator.getScreenshot();
         setupCanvas();
     }
 
@@ -91,43 +85,98 @@ public class STFAnnotateActivity extends ActionBarActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             LayoutInflater inflater = this.getLayoutInflater();
             builder.setView(inflater.inflate(R.layout.dialog_feedback, null))
-                    .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(SEND_BUTTON, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             Bitmap result = STFAnnotator.mergeAnnotation(screenshot, overlay);
+                            POST();
                             STFAnnotateActivity.this.finish();
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(CANCEL_BUTTON, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                         }
                     });
-            View customTitle = getLayoutInflater().inflate(R.layout.dialog_feedback_title, null);
-            builder.setCustomTitle(customTitle);
-            builder.setInverseBackgroundForced(true);
-            AlertDialog dialog = builder.create();
+            dialog = builder.create();
             dialog.show();
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.stf_blue));
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.stf_blue));
+            ImageView header = (ImageView) dialog.findViewById(R.id.header);
+            header.setBackgroundColor(Color.parseColor(STFConfig.APP_COLOR));
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor(STFConfig.APP_COLOR));
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor(STFConfig.APP_COLOR));
             dialog.setCanceledOnTouchOutside(false);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private View.OnTouchListener getAnnotationListener() {
+        return new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        downX = event.getX();
+                        downY = event.getY() + CORRECTION;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        upX = event.getX();
+                        upY = event.getY() + CORRECTION;
+                        canvas.drawLine(downX, downY, upX, upY, paint);
+                        annotationView.invalidate();
+                        downX = upX;
+                        downY = upY;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        };
     }
 
     private void setupCanvas() {
         overlay = Bitmap.createBitmap(screenshot.getWidth(), screenshot.getHeight(), screenshot.getConfig());
         canvas = new Canvas(overlay);
         paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.stf_blue));
+        paint.setColor(Color.parseColor(PAINT_COLOR));
         paint.setDither(true);
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(5);
+        paint.setStrokeWidth(STROKE_WIDTH);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
         matrix = new Matrix();
         canvas.drawBitmap(screenshot, matrix, paint);
-        screenshotView.setImageBitmap(overlay);
+        annotationView.setImageBitmap(overlay);
+    }
+
+    private void POST() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject requestJson = STFJira.getRequest(getFeedback());
+                HttpPost post = new HttpPost(STFConfig.API_SERVER);
+                try {
+                    StringEntity se = new StringEntity(requestJson.toString());
+                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    post.setEntity(se);
+                    HttpClient httpClient = new DefaultHttpClient();
+                    HttpResponse response = httpClient.execute(post);
+                    Log.d("HTTP", response.getStatusLine().getStatusCode() + "");
+                } catch (UnsupportedEncodingException e ){
+                } catch (IOException e) {
+                }
+            }
+        }).start();
+    }
+
+    private String getFeedback() {
+        EditText feedback = (EditText) dialog.findViewById(R.id.feedback);
+        return feedback.getText().toString();
     }
 }
