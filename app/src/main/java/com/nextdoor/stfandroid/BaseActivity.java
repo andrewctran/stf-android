@@ -4,23 +4,23 @@ import android.app.Activity;
 import android.os.Bundle;
 
 public abstract class BaseActivity extends Activity {
-    private STFManager stfManager;
+    private STFSession stfSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        stfManager = new STFManager(this);
+        stfSession = STFManager.getInstance(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        stfManager.onResume();
+        stfSession.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        stfManager.onPause();
+        stfSession.onPause();
     }
 }

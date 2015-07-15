@@ -68,7 +68,7 @@ public class STFAnnotateActivity extends ActionBarActivity {
                 return true;
             }
         });
-        screenshot = STFAnnotator.getScreenshot(getIntent().getStringExtra(STFManager.TAG));
+        screenshot = STFAnnotator.getScreenshot(getIntent().getStringExtra(STFSession.TAG));
         setupCanvas();
     }
 

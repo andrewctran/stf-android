@@ -1,35 +1,39 @@
 package com.nextdoor.stfandroid;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 
+/**
+ * Image handling for the bug/feedback reporter.
+ */
 public class STFAnnotator {
     public static final String TAG = "STFAnnotator";
 
+    /**
+     * Takes a screenshot of the current display.
+     * @param rootView The root of the app's view hierarchy.
+     * @return Screenshot in Bitmap format
+     */
     public static Bitmap takeScreenshot(View rootView) {
         rootView.setDrawingCacheEnabled(true);
         return rootView.getDrawingCache();
     }
 
-    public static Bitmap getScreenshot(String path) {
+    /**
+     * Grabs the latest screenshot from disk.
+     * @return Screenshot in Bitmap format
+     */
+    public static Bitmap getScreenshot() {
+        String path = Environment.getExternalStorageDirectory() + "/STFScreenshot";
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
         File screenshotFile = new File(path);
@@ -37,6 +41,11 @@ public class STFAnnotator {
         return bitmap;
     }
 
+    /**
+     * Saves the screenshot to disk, overriding any existing screenshot.
+     * @param screenshot
+     * @return The image path to the screenshot on disk.
+     */
     public static String saveScreenshot(Bitmap screenshot) {
         String externalPath = Environment.getExternalStorageDirectory() + "/";
         String imagePath = externalPath + "STFScreenshot";
@@ -56,6 +65,12 @@ public class STFAnnotator {
         return imagePath;
     }
 
+    /**
+     * Overlay user annotations on the screenshot.
+     * @param screenshot
+     * @param annotation
+     * @return The composite bitmap combining both screenshot and annotations.
+     */
     public static Bitmap mergeAnnotation(Bitmap screenshot, Bitmap annotation) {
         Bitmap overlay = Bitmap.createBitmap(screenshot.getWidth(), screenshot.getHeight(), screenshot.getConfig());
         Canvas canvas = new Canvas(overlay);
