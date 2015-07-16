@@ -3,8 +3,6 @@ package com.nextdoor.stfandroid;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Base64;
-
 public class STFJira {
     private static final String JIRA_PROJECT = "project";
     private static final String JIRA_PROJECT_KEY = "key";

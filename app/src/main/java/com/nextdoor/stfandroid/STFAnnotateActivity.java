@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -90,8 +91,10 @@ public class STFAnnotateActivity extends ActionBarActivity {
                     .setPositiveButton(SEND_BUTTON, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            POST();
-                            STFAnnotateActivity.this.finish();
+                            if (validateEmailAddr()) {
+                                POST();
+                                STFAnnotateActivity.this.finish();
+                            }
                         }
                     })
                     .setNegativeButton(CANCEL_BUTTON, new DialogInterface.OnClickListener() {
@@ -193,5 +196,15 @@ public class STFAnnotateActivity extends ActionBarActivity {
         image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    private boolean validateEmailAddr() {
+        EditText emailAddr = (EditText) dialog.findViewById(R.id.email);
+        if (emailAddr.getText().toString().trim().equals("")) {
+            emailAddr.setError("Email address required.");
+            Toast.makeText(this, emailAddr.getError(), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }
