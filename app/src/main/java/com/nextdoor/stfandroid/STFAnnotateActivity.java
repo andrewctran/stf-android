@@ -20,6 +20,7 @@ import android.graphics.Paint;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -88,7 +90,6 @@ public class STFAnnotateActivity extends ActionBarActivity {
                     .setPositiveButton(SEND_BUTTON, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            Bitmap result = STFAnnotator.mergeAnnotation(screenshot, overlay);
                             POST();
                             STFAnnotateActivity.this.finish();
                         }
@@ -159,12 +160,14 @@ public class STFAnnotateActivity extends ActionBarActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                JSONObject requestJson = STFJira.getRequest(getFeedback());
+                Bitmap image = STFAnnotator.mergeAnnotation(screenshot, overlay);
+                JSONObject requestJson = STFJira.getRequest(getFeedback(), getEmailAddr(), bitmapToBase64(image));
                 HttpPost post = new HttpPost(STFConfig.API_SERVER);
                 try {
-                    StringEntity se = new StringEntity(requestJson.toString());
-                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-                    post.setEntity(se);
+                    StringEntity jsonString = new StringEntity(requestJson.toString());
+                    jsonString.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    post.setEntity(jsonString);
+                    post.setHeader("Content-Type", "application/json");
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpResponse response = httpClient.execute(post);
                     Log.d("HTTP", response.getStatusLine().getStatusCode() + "");
@@ -178,5 +181,17 @@ public class STFAnnotateActivity extends ActionBarActivity {
     private String getFeedback() {
         EditText feedback = (EditText) dialog.findViewById(R.id.feedback);
         return feedback.getText().toString();
+    }
+
+    private String getEmailAddr() {
+        EditText emailAddr = (EditText) dialog.findViewById(R.id.email);
+        return emailAddr.getText().toString();
+    }
+
+    private String bitmapToBase64(Bitmap image) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 }
