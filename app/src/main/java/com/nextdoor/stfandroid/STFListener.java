@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 
 /**
  * Detects device shakes using most recently observed samples of accelerometer data.
@@ -41,6 +42,15 @@ public class STFListener implements SensorEventListener {
         if (accelerationLog.isShaking()) {
             accelerationLog.clear();
             stfDetector.onShake();
+            // Prevent detection of sequential shakes
+            stopListening();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    startListening(sensorManager);
+                }
+            }, 1000);
+
         }
     }
 
@@ -82,7 +92,6 @@ public class STFListener implements SensorEventListener {
     public void stopListening() {
         if (accelerometer != null) {
             sensorManager.unregisterListener(this, accelerometer);
-            sensorManager = null;
             accelerometer = null;
         }
     }

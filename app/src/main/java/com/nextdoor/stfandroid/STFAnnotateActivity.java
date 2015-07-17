@@ -94,8 +94,7 @@ public class STFAnnotateActivity extends ActionBarActivity {
                             Bitmap image = STFAnnotator.mergeAnnotation(screenshot, overlay);
                             STFItem stfItem = new STFItem(bitmapToBase64(image), getFeedback(), "", getEmailAddr());
                             STFManager.enqueue(stfItem);
-//                            POST();
-                            Log.d("poop", STFManager.getInstance(getApplicationContext()).getRequestThread().isAlive() + "");
+                            STFManager.updateQueue();
                             STFAnnotateActivity.this.finish();
                         }
                     })
@@ -160,28 +159,6 @@ public class STFAnnotateActivity extends ActionBarActivity {
         canvas.drawBitmap(screenshot, matrix, paint);
         annotationView.setImageBitmap(overlay);
     }
-
-//    private void POST() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Bitmap image = STFAnnotator.mergeAnnotation(screenshot, overlay);
-//                JSONObject requestJson = STFJira.getRequest(getFeedback(), getEmailAddr(), bitmapToBase64(image));
-//                HttpPost post = new HttpPost(STFConfig.API_SERVER);
-//                try {
-//                    StringEntity jsonString = new StringEntity(requestJson.toString());
-//                    jsonString.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-//                    post.setEntity(jsonString);
-//                    post.setHeader("Content-Type", "application/json");
-//                    HttpClient httpClient = new DefaultHttpClient();
-//                    HttpResponse response = httpClient.execute(post);
-//                    Log.d("HTTP", response.getStatusLine().getStatusCode() + "");
-//                } catch (UnsupportedEncodingException e ){
-//                } catch (IOException e) {
-//                }
-//            }
-//        }).start();
-//    }
 
     private String getFeedback() {
         EditText feedback = (EditText) dialog.findViewById(R.id.feedback);

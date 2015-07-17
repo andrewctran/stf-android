@@ -16,16 +16,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class STFRequestThread extends Thread {
-    List<STFItem> stfQueue;
+    private List<STFItem> stfQueue;
+    private boolean isRunning;
 
     public STFRequestThread(List<STFItem> stfQueue) {
         this.stfQueue = stfQueue;
+        isRunning = true;
     }
 
     @Override
     public void run() {
-        android.os.Debug.waitForDebugger();
-        while (true) {
+        while (isRunning) {
             while (!stfQueue.isEmpty()) {
                 STFItem stfItem = stfQueue.get(0);
                 JSONObject requestJson = STFJira.getRequest(stfItem.getSummary(), stfItem.getEmailAddr(), stfItem.getBase64Screenshot());
@@ -39,16 +40,24 @@ public class STFRequestThread extends Thread {
                     HttpResponse response = httpClient.execute(post);
                     Log.d("HTTP", response.getStatusLine().getStatusCode() + "");
                     if (response.getStatusLine().getStatusCode() == 200) {
-                        stfQueue.remove(0);
+                        STFManager.dequeue();
+                        STFManager.updateQueue();
+//                        STFManager.persist();
                     }
                 } catch (UnsupportedEncodingException e) {
                 } catch (IOException e) {
                 }
             }
-            try {
-                this.sleep(5000);
-            } catch (InterruptedException e) {
-            }
+
         }
     }
+
+    public void requestStop() {
+        isRunning = false;
+    }
+
+    public void setQueue(List<STFItem> queue) {
+        this.stfQueue = queue;
+    }
+
 }

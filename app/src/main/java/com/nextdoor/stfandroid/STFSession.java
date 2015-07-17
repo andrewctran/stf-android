@@ -7,6 +7,9 @@ import android.graphics.Bitmap;
 import android.hardware.SensorManager;
 import android.os.Environment;
 
+import java.util.List;
+import java.util.Queue;
+
 /**
  * A shake detector that lives implicitly in all app activities.
  */
@@ -36,10 +39,12 @@ public class STFSession implements STFListener.STFDetector {
 
     public void onResume() {
         stfListener.startListening(sensorManager);
+        stfRequestThread = new STFRequestThread(STFManager.getQueue());
     }
 
     public void onPause() {
         stfListener.stopListening();
+        stfRequestThread.requestStop();
     }
 
     /**
@@ -53,5 +58,9 @@ public class STFSession implements STFListener.STFDetector {
 
     public STFRequestThread getRequestThread() {
         return stfRequestThread;
+    }
+
+    public void setQueue(List<STFItem> stfQueue) {
+        this.stfRequestThread.setQueue(stfQueue);
     }
 }

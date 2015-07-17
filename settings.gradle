@@ -1,1 +1,1 @@
-include ':app', ':stf'
+include ':app', ':stf', ':library'
