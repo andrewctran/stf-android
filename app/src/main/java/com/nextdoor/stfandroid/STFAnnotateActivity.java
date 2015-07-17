@@ -91,10 +91,12 @@ public class STFAnnotateActivity extends ActionBarActivity {
                     .setPositiveButton(SEND_BUTTON, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            if (validateEmailAddr()) {
-                                POST();
-                                STFAnnotateActivity.this.finish();
-                            }
+                            Bitmap image = STFAnnotator.mergeAnnotation(screenshot, overlay);
+                            STFItem stfItem = new STFItem(bitmapToBase64(image), getFeedback(), "", getEmailAddr());
+                            STFManager.enqueue(stfItem);
+//                            POST();
+                            Log.d("poop", STFManager.getInstance(getApplicationContext()).getRequestThread().isAlive() + "");
+                            STFAnnotateActivity.this.finish();
                         }
                     })
                     .setNegativeButton(CANCEL_BUTTON, new DialogInterface.OnClickListener() {
@@ -159,27 +161,27 @@ public class STFAnnotateActivity extends ActionBarActivity {
         annotationView.setImageBitmap(overlay);
     }
 
-    private void POST() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Bitmap image = STFAnnotator.mergeAnnotation(screenshot, overlay);
-                JSONObject requestJson = STFJira.getRequest(getFeedback(), getEmailAddr(), bitmapToBase64(image));
-                HttpPost post = new HttpPost(STFConfig.API_SERVER);
-                try {
-                    StringEntity jsonString = new StringEntity(requestJson.toString());
-                    jsonString.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-                    post.setEntity(jsonString);
-                    post.setHeader("Content-Type", "application/json");
-                    HttpClient httpClient = new DefaultHttpClient();
-                    HttpResponse response = httpClient.execute(post);
-                    Log.d("HTTP", response.getStatusLine().getStatusCode() + "");
-                } catch (UnsupportedEncodingException e ){
-                } catch (IOException e) {
-                }
-            }
-        }).start();
-    }
+//    private void POST() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Bitmap image = STFAnnotator.mergeAnnotation(screenshot, overlay);
+//                JSONObject requestJson = STFJira.getRequest(getFeedback(), getEmailAddr(), bitmapToBase64(image));
+//                HttpPost post = new HttpPost(STFConfig.API_SERVER);
+//                try {
+//                    StringEntity jsonString = new StringEntity(requestJson.toString());
+//                    jsonString.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+//                    post.setEntity(jsonString);
+//                    post.setHeader("Content-Type", "application/json");
+//                    HttpClient httpClient = new DefaultHttpClient();
+//                    HttpResponse response = httpClient.execute(post);
+//                    Log.d("HTTP", response.getStatusLine().getStatusCode() + "");
+//                } catch (UnsupportedEncodingException e ){
+//                } catch (IOException e) {
+//                }
+//            }
+//        }).start();
+//    }
 
     private String getFeedback() {
         EditText feedback = (EditText) dialog.findViewById(R.id.feedback);

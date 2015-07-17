@@ -22,7 +22,7 @@ public class STFJira {
             issueTypeJson.put(JIRA_ISSUETYPE_NAME, TYPE);
             requestJson.put(JIRA_PROJECT, projectJson);
             requestJson.put(JIRA_SUMMARY, summary);
-            requestJson.put(JIRA_DESCRIPTION, email);
+            requestJson.put(JIRA_DESCRIPTION, "");
             requestJson.put(JIRA_ISSUETYPE, issueTypeJson);
             requestJson.put(JIRA_ATTACHMENT, encodedImage);
         } catch (JSONException e) {

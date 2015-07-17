@@ -16,11 +16,14 @@ public class STFSession implements STFListener.STFDetector {
     private STFListener stfListener;
     private Context context;
     private String imagePath;
+    private STFRequestThread stfRequestThread;
 
     public STFSession(Context context) {
         this.context = context;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         stfListener = new STFListener(this);
+        stfRequestThread = new STFRequestThread(STFManager.getQueue());
+        stfRequestThread.start();
     }
 
     @Override
@@ -46,5 +49,9 @@ public class STFSession implements STFListener.STFDetector {
         Intent launchIntent = new Intent(context, STFAnnotateActivity.class);
         launchIntent.putExtra(TAG, imagePath);
         context.startActivity(launchIntent);
+    }
+
+    public STFRequestThread getRequestThread() {
+        return stfRequestThread;
     }
 }
