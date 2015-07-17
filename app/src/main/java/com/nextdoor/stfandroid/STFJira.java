@@ -28,8 +28,9 @@ public class STFJira {
             issueJson.put(JIRA_DESCRIPTION, "");
             issueJson.put(JIRA_ISSUETYPE, issueTypeJson);
             requestJson.put(JIRA_ISSUE, issueJson);
-            requestJson.put(JIRA_REPORTER, email);
+            requestJson.put(JIRA_REPORTER, "atran@nextdoor.com");
             requestJson.put(JIRA_ATTACHMENT, encodedImage);
+            System.out.print(requestJson.toString(2));
         } catch (JSONException e) {
         }
         return requestJson;
