@@ -66,6 +66,14 @@ public class STFAnnotator {
         return imagePath;
     }
 
+    public static void deleteScreenshot() {
+        String externalPath = Environment.getExternalStorageDirectory() + "/";
+        String imagePath = externalPath + "STFScreenshot";
+        File imageFile = new File(imagePath);
+        if (imageFile.exists()) {
+            imageFile.delete();
+        }
+    }
     /**
      * Overlay user annotations on the screenshot.
      * @param screenshot

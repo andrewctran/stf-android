@@ -2,13 +2,6 @@
 <items version="2" >
 
     <item
-        jar="/Users/atran/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
-        <dex dex="/Users/atran/src/stf-android/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-6caed82a9d99ffc40b144694b7d75b9639e64bd8.jar" />
-    </item>
-    <item
         jar="/Users/atran/src/stf-android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/jars/libs/internal_impl-22.0.0.jar"
         jumboMode="false"
         revision="22.0.1"
@@ -21,6 +14,13 @@
         revision="22.0.1"
         sha1="d84409890828e07d344a3b9b1da545dba9897b51">
         <dex dex="/Users/atran/src/stf-android/app/build/intermediates/pre-dexed/debug/classes-20eca7b116291dfb146f708c3e34b46dc7be0063.jar" />
+    </item>
+    <item
+        jar="/Users/atran/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="/Users/atran/src/stf-android/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-6caed82a9d99ffc40b144694b7d75b9639e64bd8.jar" />
     </item>
     <item
         jar="/Users/atran/src/stf-android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/jars/classes.jar"

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/stf/stf.iml" filepath="$PROJECT_DIR$/stf/stf.iml" />
       <module fileurl="file://$PROJECT_DIR$/stf-android.iml" filepath="$PROJECT_DIR$/stf-android.iml" />
     </modules>
   </component>

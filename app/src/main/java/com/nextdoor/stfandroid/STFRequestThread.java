@@ -42,7 +42,7 @@ public class STFRequestThread extends Thread {
                     if (response.getStatusLine().getStatusCode() == 200) {
                         STFManager.dequeue();
                         STFManager.updateQueue();
-//                        STFManager.persist();
+                        STFManager.persist();
                     }
                 } catch (UnsupportedEncodingException e) {
                 } catch (IOException e) {
@@ -59,5 +59,4 @@ public class STFRequestThread extends Thread {
     public void setQueue(List<STFItem> queue) {
         this.stfQueue = queue;
     }
-
 }

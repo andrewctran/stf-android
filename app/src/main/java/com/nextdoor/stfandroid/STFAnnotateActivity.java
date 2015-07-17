@@ -95,6 +95,7 @@ public class STFAnnotateActivity extends ActionBarActivity {
                             STFItem stfItem = new STFItem(bitmapToBase64(image), getFeedback(), "", getEmailAddr());
                             STFManager.enqueue(stfItem);
                             STFManager.updateQueue();
+                            STFAnnotator.deleteScreenshot();
                             STFAnnotateActivity.this.finish();
                         }
                     })
