@@ -1,5 +1,6 @@
 package com.nextdoor.library;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -22,7 +23,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 
 
-public class STFAnnotateActivity extends ActionBarActivity {
+public class STFAnnotateActivity extends Activity {
     private final int STROKE_WIDTH = 5;
     private final String PAINT_COLOR = "#F22613";
     private final int CORRECTION = 100;
@@ -46,12 +47,12 @@ public class STFAnnotateActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stfannotate);
         annotationView = (ImageView) findViewById(R.id.screenshot);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setElevation(10);
+//        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setElevation(10);
         annotationView.setDrawingCacheEnabled(true);
         annotationView.setOnTouchListener(getAnnotationListener());
-        screenshot = STFAnnotator.getScreenshot();
+        screenshot = STFAnnotator.getScreenshot(getIntent().getExtras().getString(STFSession.TAG));
         setupCanvas();
     }
 

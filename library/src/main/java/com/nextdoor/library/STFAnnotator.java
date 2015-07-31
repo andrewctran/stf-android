@@ -1,5 +1,7 @@
 package com.nextdoor.library;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,6 +10,7 @@ import android.os.Environment;
 import android.view.View;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,13 +37,16 @@ public class STFAnnotator {
      * Grabs the latest screenshot from disk.
      * @return Screenshot in Bitmap format
      */
-    public static Bitmap getScreenshot() {
-//        String path = Environment.getExternalStorageDirectory() + "/STFScreenshot";
-        String path = STFSession.imagePath;
+    public static Bitmap getScreenshot(String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
         File screenshotFile = new File(path);
-        Bitmap bitmap = BitmapFactory.decodeFile(screenshotFile.getAbsolutePath(), options);
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(screenshotFile));
+        } catch (FileNotFoundException e) {
+
+        }
         return bitmap;
     }
 
@@ -49,24 +55,21 @@ public class STFAnnotator {
      * @param screenshot
      * @return The image path to the screenshot on disk.
      */
-    public static String saveScreenshot(Bitmap screenshot) {
-//        String externalPath = Environment.getExternalStorageDirectory() + "/";
-//        String imagePath = externalPath + "STFScreenshot";
-        String imagePath = STFSession.imagePath;
-        File imageFile = new File(imagePath);
-        FileOutputStream fos;
-        if (imageFile.exists()) {
-            imageFile.delete();
-        }
+    public static String saveScreenshot(Context context, Bitmap screenshot) {
+        ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
+        File directory = cw.getDir("stfImages", Context.MODE_PRIVATE);
+        File imagePath = new File(directory,"stf_screenshot.jpg");
+
+        FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(imageFile);
-            screenshot.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
+
+            fos = new FileOutputStream(imagePath);
+            screenshot.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return imagePath;
+        return imagePath.getAbsolutePath();
     }
 
     public static void deleteScreenshot() {

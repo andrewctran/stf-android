@@ -18,7 +18,6 @@ public class STFSession implements STFListener.STFDetector {
     private SensorManager sensorManager;
     private STFListener stfListener;
     private Context context;
-//    private String imagePath;
     private STFRequestThread stfRequestThread;
 
     public STFSession(Context context) {
@@ -33,8 +32,7 @@ public class STFSession implements STFListener.STFDetector {
     public void onShake() {
         View rootView = ((Activity) context).getWindow().getDecorView();
         Bitmap screenshot = STFAnnotator.takeScreenshot(rootView);
-        STFAnnotator.saveScreenshot(screenshot);
-        imagePath = context.getFilesDir().getPath();
+        imagePath = STFAnnotator.saveScreenshot(context, screenshot);
         startAnnotateActivity();
     }
 
