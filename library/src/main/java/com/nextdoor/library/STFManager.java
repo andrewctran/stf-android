@@ -28,12 +28,10 @@ public class STFManager {
      * @return Valid STFSession
      */
     public static STFSession getInstance(Context context) {
-        if (stfSession == null) {
-            stfSession = new STFSession(context);
-        }
-        Timer timer = new Timer();
-        timer.schedule(new SayHello(), 0, 5000);
-        return stfSession;
+//        if (stfSession == null) {
+//            stfSession = new STFSession(context);
+//        }
+        return new STFSession(context);
     }
 
     public static List<STFItem> getQueue() {
@@ -75,12 +73,6 @@ public class STFManager {
             outputStream.close();
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
-        }
-    }
-
-    private static class SayHello extends TimerTask {
-        public void run() {
-            System.out.println("Queue size: " + stfQueue.size());
         }
     }
 }

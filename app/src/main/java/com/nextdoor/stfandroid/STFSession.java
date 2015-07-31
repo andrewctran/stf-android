@@ -5,20 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.SensorManager;
-import android.os.Environment;
+import android.util.Log;
+import android.view.View;
 
 import java.util.List;
-import java.util.Queue;
 
 /**
  * A shake detector that lives implicitly in all app activities.
  */
 public class STFSession implements STFListener.STFDetector {
     public static final String TAG = "STFSession";
+    public static String imagePath;
     private SensorManager sensorManager;
     private STFListener stfListener;
     private Context context;
-    private String imagePath;
+//    private String imagePath;
     private STFRequestThread stfRequestThread;
 
     public STFSession(Context context) {
@@ -31,9 +32,10 @@ public class STFSession implements STFListener.STFDetector {
 
     @Override
     public void onShake() {
-        Bitmap screenshot = STFAnnotator.takeScreenshot(((Activity) context).findViewById(android.R.id.content).getRootView());
+        View rootView = ((Activity) context).getWindow().getDecorView();
+        Bitmap screenshot = STFAnnotator.takeScreenshot(rootView);
         STFAnnotator.saveScreenshot(screenshot);
-        imagePath = Environment.getExternalStorageDirectory() + "/STFScreenshot";
+        imagePath = context.getFilesDir().getPath();
         startAnnotateActivity();
     }
 

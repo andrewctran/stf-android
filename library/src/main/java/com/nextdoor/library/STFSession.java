@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.SensorManager;
-import android.os.Environment;
+import android.view.View;
 
 import java.util.List;
 
@@ -14,10 +14,11 @@ import java.util.List;
  */
 public class STFSession implements STFListener.STFDetector {
     public static final String TAG = "STFSession";
+    public static String imagePath;
     private SensorManager sensorManager;
     private STFListener stfListener;
     private Context context;
-    private String imagePath;
+//    private String imagePath;
     private STFRequestThread stfRequestThread;
 
     public STFSession(Context context) {
@@ -30,9 +31,10 @@ public class STFSession implements STFListener.STFDetector {
 
     @Override
     public void onShake() {
-        Bitmap screenshot = STFAnnotator.takeScreenshot(((Activity) context).findViewById(android.R.id.content).getRootView());
+        View rootView = ((Activity) context).getWindow().getDecorView();
+        Bitmap screenshot = STFAnnotator.takeScreenshot(rootView);
         STFAnnotator.saveScreenshot(screenshot);
-        imagePath = Environment.getExternalStorageDirectory() + "/STFScreenshot";
+        imagePath = context.getFilesDir().getPath();
         startAnnotateActivity();
     }
 
@@ -50,7 +52,7 @@ public class STFSession implements STFListener.STFDetector {
      * Starts STFAnnotateActivity with the most recently grabbed screenshot on disk.
      */
     private void startAnnotateActivity() {
-        Intent launchIntent = new Intent(context, STFAnnotateActivity.class);
+        Intent launchIntent = new Intent(context, com.nextdoor.library.STFAnnotateActivity.class);
         launchIntent.putExtra(TAG, imagePath);
         context.startActivity(launchIntent);
     }

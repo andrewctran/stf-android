@@ -26,7 +26,8 @@ public class STFAnnotator {
      */
     public static Bitmap takeScreenshot(View rootView) {
         rootView.setDrawingCacheEnabled(true);
-        return rootView.getDrawingCache();
+        rootView.buildDrawingCache(true);
+        return Bitmap.createBitmap(rootView.getDrawingCache());
     }
 
     /**
@@ -34,7 +35,8 @@ public class STFAnnotator {
      * @return Screenshot in Bitmap format
      */
     public static Bitmap getScreenshot() {
-        String path = Environment.getExternalStorageDirectory() + "/STFScreenshot";
+//        String path = Environment.getExternalStorageDirectory() + "/STFScreenshot";
+        String path = STFSession.imagePath;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
         File screenshotFile = new File(path);
@@ -48,8 +50,9 @@ public class STFAnnotator {
      * @return The image path to the screenshot on disk.
      */
     public static String saveScreenshot(Bitmap screenshot) {
-        String externalPath = Environment.getExternalStorageDirectory() + "/";
-        String imagePath = externalPath + "STFScreenshot";
+//        String externalPath = Environment.getExternalStorageDirectory() + "/";
+//        String imagePath = externalPath + "STFScreenshot";
+        String imagePath = STFSession.imagePath;
         File imageFile = new File(imagePath);
         FileOutputStream fos;
         if (imageFile.exists()) {
@@ -67,8 +70,7 @@ public class STFAnnotator {
     }
 
     public static void deleteScreenshot() {
-        String externalPath = Environment.getExternalStorageDirectory() + "/";
-        String imagePath = externalPath + "STFScreenshot";
+        String imagePath = STFSession.imagePath;
         File imageFile = new File(imagePath);
         if (imageFile.exists()) {
             imageFile.delete();
