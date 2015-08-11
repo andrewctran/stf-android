@@ -28,10 +28,8 @@ public class STFManager {
      * @return Valid STFSession
      */
     public static STFSession getInstance(Context context) {
-//        if (stfSession == null) {
-//            stfSession = new STFSession(context);
-//        }
-        return new STFSession(context);
+        stfSession = new STFSession(context);
+        return stfSession;
     }
 
     public static List<STFItem> getQueue() {
