@@ -19,6 +19,7 @@ import java.util.TimerTask;
  * Manages STFSessions in the app.
  */
 public class STFManager {
+    public static final String REQUEST_QUEUE_DIR = "STFQueue";
     private static STFSession stfSession;
     private static List<STFItem> stfQueue;
 
@@ -36,7 +37,7 @@ public class STFManager {
         if (stfQueue == null) {
             ObjectInputStream inputStream;
             try {
-                inputStream = new ObjectInputStream(new FileInputStream(new File(Environment.getExternalStorageDirectory(), "STFQueue")));
+                inputStream = new ObjectInputStream(new FileInputStream(new File(Environment.getExternalStorageDirectory(), REQUEST_QUEUE_DIR)));
                 stfQueue = (List<STFItem>) inputStream.readObject();
                 inputStream.close();
             } catch (Exception e) {
@@ -64,7 +65,7 @@ public class STFManager {
     public static void persist() {
         ObjectOutputStream outputStream;
         try {
-            File outFile = new File(Environment.getExternalStorageDirectory(), "STFQueue");
+            File outFile = new File(Environment.getExternalStorageDirectory(), REQUEST_QUEUE_DIR);
             outputStream = new ObjectOutputStream(new FileOutputStream(outFile));
             outputStream.writeObject(stfQueue);
             outputStream.flush();

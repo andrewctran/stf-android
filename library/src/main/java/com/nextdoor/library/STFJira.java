@@ -21,7 +21,7 @@ public class STFJira {
         JSONObject projectJson = new JSONObject();
         JSONObject issueTypeJson = new JSONObject();
         try {
-            projectJson.put(JIRA_PROJECT_KEY, STFConfig.JIRA_PROJECT);
+            projectJson.put(JIRA_PROJECT_KEY, STFConfig.getJiraProject());
             issueTypeJson.put(JIRA_ISSUETYPE_NAME, TYPE);
             issueJson.put(JIRA_PROJECT, projectJson);
             issueJson.put(JIRA_SUMMARY, summary);
@@ -30,7 +30,6 @@ public class STFJira {
             requestJson.put(JIRA_ISSUE, issueJson);
             requestJson.put(JIRA_REPORTER, "atran@nextdoor.com");
             requestJson.put(JIRA_ATTACHMENT, encodedImage);
-            System.out.print(requestJson.toString(2));
         } catch (JSONException e) {
         }
         return requestJson;

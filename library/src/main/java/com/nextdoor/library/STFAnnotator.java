@@ -19,8 +19,8 @@ import java.io.IOException;
  * Image handling for the bug/feedback reporter.
  */
 public class STFAnnotator {
-    public static final String TAG = "STFAnnotator";
-    public static final String IMAGE_PATH = Environment.getExternalStorageDirectory() + "/STFScreenshot";
+    public static final String STF_FILENAME = "stf_screenshot.jpg";
+    public static final String STF_DIR = "stfImages";
 
     /**
      * Takes a screenshot of the current display.
@@ -57,8 +57,8 @@ public class STFAnnotator {
      */
     public static String saveScreenshot(Context context, Bitmap screenshot) {
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
-        File directory = cw.getDir("stfImages", Context.MODE_PRIVATE);
-        File imagePath = new File(directory,"stf_screenshot.jpg");
+        File directory = cw.getDir(STF_DIR, Context.MODE_PRIVATE);
+        File imagePath = new File(directory, STF_FILENAME);
 
         FileOutputStream fos = null;
         try {

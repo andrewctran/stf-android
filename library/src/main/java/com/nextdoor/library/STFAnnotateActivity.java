@@ -47,9 +47,6 @@ public class STFAnnotateActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stfannotate);
         annotationView = (ImageView) findViewById(R.id.screenshot);
-//        getSupportActionBar().setHomeButtonEnabled(true);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setElevation(10);
         annotationView.setDrawingCacheEnabled(true);
         annotationView.setOnTouchListener(getAnnotationListener());
         screenshot = STFAnnotator.getScreenshot(getIntent().getExtras().getString(STFSession.TAG));
@@ -64,9 +61,6 @@ public class STFAnnotateActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
             this.finish();
@@ -94,9 +88,9 @@ public class STFAnnotateActivity extends Activity {
             dialog = builder.create();
             dialog.show();
             ImageView header = (ImageView) dialog.findViewById(R.id.header);
-            header.setBackgroundColor(Color.parseColor(STFConfig.APP_COLOR));
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor(STFConfig.APP_COLOR));
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor(STFConfig.APP_COLOR));
+            header.setBackgroundColor(Color.parseColor(STFConfig.getAppColor()));
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor(STFConfig.getAppColor()));
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor(STFConfig.getAppColor()));
             dialog.setCanceledOnTouchOutside(false);
         }
         return super.onOptionsItemSelected(item);

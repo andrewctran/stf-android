@@ -30,7 +30,7 @@ public class STFRequestThread extends Thread {
             while (!stfQueue.isEmpty()) {
                 STFItem stfItem = stfQueue.get(0);
                 JSONObject requestJson = STFJira.getRequest(stfItem.getSummary(), stfItem.getEmailAddr(), stfItem.getBase64Screenshot());
-                HttpPost post = new HttpPost(STFConfig.API_SERVER);
+                HttpPost post = new HttpPost(STFConfig.getApiServer());
                 try {
                     StringEntity jsonString = new StringEntity(requestJson.toString());
                     jsonString.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
