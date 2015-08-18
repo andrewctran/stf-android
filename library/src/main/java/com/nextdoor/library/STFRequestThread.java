@@ -36,6 +36,7 @@ public class STFRequestThread extends Thread {
                     jsonString.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                     post.setEntity(jsonString);
                     post.setHeader("Content-Type", "application/json");
+                    post.addHeader("x-api-get", STFConfig.getApiKey());
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpResponse response = httpClient.execute(post);
                     Log.d("HTTP", response.getStatusLine().getStatusCode() + "");

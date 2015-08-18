@@ -5,6 +5,7 @@ public class STFConfig {
     private static String DEFAULT_EMAIL = "";
     private static String JIRA_PROJECT = "STF1";
     private static String APP_COLOR = "#1E9E5E";
+    private static String API_KEY;
 
     public static String getApiServer() {
         return API_SERVER;
@@ -22,6 +23,10 @@ public class STFConfig {
         return APP_COLOR;
     }
 
+    public static String getApiKey() {
+        return API_KEY;
+    }
+
     public static void setApiServer(String addr) {
         API_SERVER = addr;
     }
@@ -36,5 +41,9 @@ public class STFConfig {
 
     public static void setAppColor(String hexColor) {
         APP_COLOR = hexColor;
+    }
+
+    public static void setApiKey(String apiKey) {
+        API_KEY = apiKey;
     }
 }
