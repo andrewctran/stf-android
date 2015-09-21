@@ -20,10 +20,10 @@ The Annotator overlays the user-drawn feedback bitmap on top of the screenshot a
 STFItems are persisted to disk upon completion of STFAnnotateActivity. A request thread then guarantees delivery of the STF JSON object to the API server.
 
 ####TODO
-Recycle acceleration samples in a pool to avoid excess garbage collection (STFListener)
-Prevent duplicate creation of STFAnnotationActivity
-Look into better ways of guaranteeing delivery that doesn't involve perpetual network requests (sad) (STFRequestThread)
-Improve exception handling
+- Recycle acceleration samples in a pool to avoid excess garbage collection (STFListener)
+- Prevent duplicate creation of STFAnnotationActivity
+- Look into better ways of guaranteeing delivery that doesn't involve perpetual network requests (sad) (STFRequestThread)
+- Improve exception handling
 
 
 ##Usage
@@ -49,7 +49,3 @@ Improve exception handling
 	        stfSession.onPause();
 	    }
 	}
-
-##TODO
-
-- Avoid garbage collection of acceleration log entries
